@@ -48,4 +48,6 @@ WolfiLite is named Lite because It's Original, Wolfi; had some more Potential be
   The Replit.com Repository: <a href="https://replit.com/@ReneR1/Wolfi-Lite#main.py"> replit.com/@ReneR1/Wolfi-Lite <a />
   
   <a href="https://discord.com/api/oauth2/authorize?client_id=845255635951419392&permissions=2148006976&scope=bot"> Discord Invite Link <a />
+    
+    
   <a href="https://discord.com/api/oauth2/authorize?client_id=779028053942075442&permissions=2148006976&scope=bot"> Invite Link for the GERMAN Wolfi <a />
