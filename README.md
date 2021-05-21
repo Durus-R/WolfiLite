@@ -41,7 +41,7 @@ Things without leaving Discord.
   
   (You may skip the 3)
   
-  You can start now with *$ python3 main.py*
+  You can start now with $ python3 main.py
 ## History:
 WolfiLite is named Lite because It's Original, Wolfi; had some more Potential because it lived on a 
  Computer with the Wolfram Engine and interacted with it too. But i'm glad that i could restore most feauters on <a href="replit.com"> Replit.com <a />.
