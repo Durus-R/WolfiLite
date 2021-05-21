@@ -55,8 +55,8 @@ genius = lyricsgenius.Genius(os.environ["Genius"])
 
 def imagedownload(topic):
   g_crawler.crawl(keyword=topic,  max_num=2)
-  x = os.listdir("/tmp/py_crawler")
-  return discord.File(os.path.join("/tmp/py_crawler", x[-1]))
+  x = os.listdir(tempdir)
+  return discord.File(os.path.join(tempdir, x[-1]))
 
   
 class Client(discord.Client):
