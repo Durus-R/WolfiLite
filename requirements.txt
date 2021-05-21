@@ -1,0 +1,7 @@
+wolframalpha
+wikipedia
+praw
+lyricsgenius
+discord.py
+deep-translator
+icrawler
