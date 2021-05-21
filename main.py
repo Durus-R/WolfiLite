@@ -3,21 +3,19 @@ import discord
 import os
 import time
 import wikipedia
-import deep_translator
 from g_crawl import GoogleImageCrawler
 import praw
 import contextlib
 import re
 import io
+from flask import Flask
 import wolframalpha
 import lyricsgenius
 token = os.environ['token']
-en_de = deep_translator.GoogleTranslator(source="auto", target="de")
-de_en = deep_translator.GoogleTranslator(source="auto", target="en")
-print("[*] Both Translators ready.")
 wikipedia.set_lang("de")
 print("[*] Language set for Wikipedia")
-g_crawler = GoogleImageCrawler(storage={'root_dir': '/tmp/py_crawler'})
+tempdir = "/tmp/py_crawl" # change this if you are using Windows!
+g_crawler = GoogleImageCrawler(storage={'root_dir': tempdir})
 print("[*] Google Image Crawler ready.")
 app_id = os.environ['WolframAlpha']
 client = wolframalpha.Client(app_id)
@@ -56,7 +54,7 @@ print(f"[*] Reddit logged in. Read-Only: {reddit.read_only}")
 genius = lyricsgenius.Genius(os.environ["Genius"])
 
 def imagedownload(topic):
-  g_crawler.crawl(keyword=de_en.translate(topic),  max_num=2)
+  g_crawler.crawl(keyword=topic,  max_num=2)
   x = os.listdir("/tmp/py_crawler")
   return discord.File(os.path.join("/tmp/py_crawler", x[-1]))
 
@@ -70,23 +68,18 @@ class Client(discord.Client):
         if message.author == self.user:
             return
         if message.content.startswith("?c "):
-            try:
-                s = de_en.translate(message.content[3:])
-            except deep_translator.exceptions.NotValidPayload:
-                s = message.content[3:]
+            
+            s = message.content[3:]
             print(f"[*] Starting Query {s}")
             res_ = strFactory(wolfram(s))
-            try:
-                res = en_de.translate(res_)
-            except deep_translator.exceptions.NotValidPayload:
-                res = res_
+            res = res_
             print(f"[*] Result: {res}")
             if res:
                 await message.channel.send(
-                    f"{message.author.mention}, deine Anfrage ergab: {res}")
+                    f"{message.author.mention}, i calculated: {res}")
             else:
                 await message.channel.send(
-                    f"{message.author.mention}, Tut mir leid, aber deine Anfrage hatte keine Lösung. :confused:"
+                    f"{message.author.mention}, Sorry, but there is no answer. :confused:"
                 )
             return
         if message.content.startswith("?w "):
@@ -97,11 +90,11 @@ class Client(discord.Client):
                 await message.channel.send(f"{message.author.mention} {res}")
             except wikipedia.exceptions.PageError:
                 await message.channel.send(
-                    f"{message.author.mention}, ich konnte leider nichts darüber herausgefunden. Hast du alles richtig geschrieben?."
+                    f"{message.author.mention}, i couldn't get one articel. Did you write all correctly?"
                 )
             except wikipedia.exceptions.DisambiguationError:
                 await message.channel.send(
-                    f"{message.author.mention}, deine Anfrage entspricht mehreren Ergebnissen. Gib ?ws <titel> ein, um alle anzeigen zu lassen."
+                    f"{message.author.mention}, your query matched more than once. Type ?ws <tilte> for show them all."
                 )
             return
         if message.content.startswith("?wl "):
@@ -109,7 +102,7 @@ class Client(discord.Client):
             print(f"[*] starting default query for {s}")
             try:
                 res = wikipedia.summary(s)
-                await message.channel.send(f"{message.author.mention}, ich habe herausgefunden:")
+                await message.channel.send(f"{message.author.mention}, i found out:")
                 if len(res) > 1800:
                   res1 = res[0:1800]
                   res2 = res[1800:]
@@ -122,11 +115,11 @@ class Client(discord.Client):
                   )
             except wikipedia.exceptions.PageError:
                 await message.channel.send(
-                    f"{message.author.mention}, ich konnte leider nichts darüber herausgefunden. Hast du alles richtig geschrieben?."
+                    f"{message.author.mention},  couldn't get one articel. Did you write all correctly?"
                 )
             except wikipedia.exceptions.DisambiguationError:
                 await message.channel.send(
-                    f"{message.author.mention}, deine Anfrage entspricht mehreren Ergebnissen. Gib ?ws <titel> ein, um alle anzeigen zu lassen."
+                    f"{message.author.mention}, your query matched more than once. Type ?ws <tilte> for show them all."
                 )
             return
 
@@ -137,19 +130,19 @@ class Client(discord.Client):
             res = strFactory(res_, end="; ")
             if res_:
                 await message.channel.send(
-                    f"{message.author.mention}, deine Anfrage ergabe folgende Artikel: {res}"
+                    f"{message.author.mention}, your query resulted: {res}"
                 )
             else:
                 await message.channel.send(
-                    f"{message.author.mention}, deine Anfrage ergabe keine Artikel. :confused:"
+                    f"{message.author.mention}, your query didn't match at least once. :confused:"
                 )
         if message.content.startswith("?img "):
             s = message.content[5:]
             i = imagedownload(s)
             await message.channel.send(file=i)
             with contextlib.suppress(os.error):
-              os.remove("/tmp/py_crawler/000001.jpg")
-              os.remove("/tmp/py_crawler/000002.jpg")
+              os.remove(os.path.join(tempdir, "000001.jpg"))
+              os.remove(os.path.join(tempdir, "000002.jpg"))
             return
         if message.content.startswith("?m "):
             s = int(message.content[3:])
@@ -167,20 +160,28 @@ class Client(discord.Client):
             await message.channel.send("""[C] René Regensbogen 2020-21
             This Bot is licensed with the GPL, but it may contain indepent parts under different licenses.
             
-            ?c <frage> -- schaue auf  Wolfram|Alpha nach deiner Frage
-            ?w <thema> -- sehr kurze Zusammenfassung (1 Satz) zu deinem Thema.
-            ?wl <thema> -- Normal lange Anfrage auf Wikipedia.
-            ?ws <titel> -- Finde alle Wikipedia-Artike mit diesem Titel.
-            ?img <thema> -- Lädt ein Bild von Google zu diesm Thema herunter.
-            ?m <i> -- postet i memes von reddit.com/r/memes 
-            ?l <title> by <singer> Sucht den Songtext des Titels""")
+?c -- lookup on Wolfram|Alpha for your question
+
+?w -- very short summary (1 sentence) on this topic featuring Wikipedia.
+
+?wl -- default-long summary on this topic featuring Wikipedia.
+
+?ws <title> -- find all Wikipedia-articles including this title.
+
+?img -- posts an image of Google with this topic.
+
+?m -- posts i memes from reddit.com/r/memes
+
+?l <title> by -- lookup the lyrics of the title by the singer
+
+""")
             return
 
         r = re.match(r"\?l (.*) by (.*)", message.content)
         if r:
             song = r.group(1)
             artist = r.group(2)
-            await message.channel.send("Warte mal kurz, ich suche das mal...")
+            await message.channel.send("Wait a second, i'll search that...")
             sng = genius.search_song(song, artist)
             sng_ = io.StringIO(str(sng.lyrics))
             res = ""
@@ -193,7 +194,6 @@ class Client(discord.Client):
             except StopIteration:
                 print("[*] Lyrics sending Done.")
                 return
-
 
 
 
