@@ -1,4 +1,4 @@
-# Wolfi Lite.
+# Wolfi Lite
 _German_ Version Of Wolfi Lite.
 
 An English version is under construction.
