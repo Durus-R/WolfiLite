@@ -18,22 +18,22 @@ Things without leaving Discord.
 -> Interacts with <a href="https://wolframalpha.com"> the Wolfram|Alpha Webengine <a />
 ## Usage:
   
-  *?c <question> -- lookup on Wolfram|Alpha for your question*
+  ?c <question> -- lookup on Wolfram|Alpha for your question
   
-  *?w <topic> -- very short summary (1 sentence) on this topic featuring Wikipedia.*
+  ?w <topic> -- very short summary (1 sentence) on this topic featuring Wikipedia.
   
-  *?wl <topic> -- default-long summary on this topic featuring Wikipedia.*
+  ?wl <topic> -- default-long summary on this topic featuring Wikipedia.
+ 
+  ?ws <title> -- find all Wikipedia-articles including this title.
   
-  *?ws <title> -- find all Wikipedia-articles including this title.*
+  ?img <topic> -- posts an image of Google with this topic.
   
-  *?img <topic> -- posts an image of Google with this topic.*
+  ?m <i> -- posts i memes from <a href = "https://reddit.com/r/memes"> reddit.com/r/memes<a />
   
-  *?m <i> -- posts i memes from <a href = "https://reddit.com/r/memes"> reddit.com/r/memes<a />.*
-  
-  *?l <title> by <singer> -- lookup the lyrics of the title by the singer*
+  ?l <title> by <singer> -- lookup the lyrics of the title by the singer
  
 ## Get it yourself!
-  *$ git clone https:/github.com/Ronnie1320/WolfiLite.git*
+  $ git clone https:/github.com/Ronnie1320/WolfiLite.git
   
   Edit (if Linux) setup.sh or on a Pc setup.bat and insert your own keys.
   
