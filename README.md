@@ -1,7 +1,5 @@
 # Wolfi Lite
-_German_ Version Of Wolfi Lite.
 
-An English version is under construction.
 
 Wolfi is a online Bot with the Target for spreading Informations and lookup 
 Things without leaving Discord.
