@@ -1,7 +1,7 @@
 # Wolfi Lite
 
 
-Wolfi is a online Bot with the Target for spreading Informations and lookup 
+Wolfi is a online Bot with the Goal for giving Informations and lookup 
 Things without leaving Discord.
 
 ## Features: 
