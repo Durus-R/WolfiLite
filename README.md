@@ -51,3 +51,5 @@ WolfiLite is named Lite because It's Original, Wolfi; had some more Potential be
     
     
   <a href="https://discord.com/api/oauth2/authorize?client_id=779028053942075442&permissions=2148006976&scope=bot"> Invite Link for the GERMAN Wolfi <a />
+    
+    This repo is archived. The links are still working.
